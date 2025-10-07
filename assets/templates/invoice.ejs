@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice - <%= info.invoiceNo %></title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #333;
+      background: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .logo-section {
+      flex: 1;
+    }
+
+    .logo {
+      width: 120px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .company-info {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .company-info .company-name {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .invoice-info {
+      text-align: right;
+      flex: 1;
+    }
+
+    .invoice-info table {
+      margin-left: auto;
+      border-collapse: collapse;
+    }
+
+    .invoice-info td {
+      padding: 3px 8px;
+      border: none;
+    }
+
+    .invoice-info .label {
+      font-weight: 500;
+      color: #666;
+      text-align: right;
+    }
+
+    .invoice-info .value {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .summary-section {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .summary-item {
+      text-align: center;
+    }
+
+    .summary-item .label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .summary-item .value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+
+    .table-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .data-table th {
+      background: #1e3a8a;
+      color: white;
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .data-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .totals-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 30px;
+    }
+
+    .totals-table {
+      width: 300px;
+      border-collapse: collapse;
+    }
+
+    .totals-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .totals-table .label {
+      font-weight: 500;
+      color: #666;
+    }
+
+    .totals-table .value {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .totals-table .total-row {
+      background: #1e3a8a;
+      color: white;
+      font-weight: 700;
+    }
+
+    .totals-table .total-row td {
+      border-bottom: none;
+    }
+
+    .currency-conversion {
+      background: #f1f5f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .currency-conversion .title {
+      font-weight: 600;
+      color: #1e3a8a;
+      margin-bottom: 10px;
+    }
+
+    .currency-conversion .conversion-text {
+      color: #475569;
+      margin-bottom: 5px;
+    }
+
+    .currency-conversion .rate-info {
+      font-size: 10px;
+      color: #64748b;
+    }
+
+    .footer {
+      border-top: 2px solid #e5e7eb;
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #666;
+      font-size: 11px;
+    }
+
+    .contact-info {
+      display: flex;
+      gap: 30px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .hst-number {
+      font-weight: 600;
+      color: #333;
+    }
+
+    @media print {
+      .container {
+        padding: 20px;
+      }
+
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo">
+          <img src="<%= logoBase64 %>" alt="Logo" width="60px" />
+        </div>
+        <div class="company-info">
+          <div class="company-name"><%= customInfo.legalName %></div>
+          <div><%= customInfo.tradeName %></div>
+          <div><%= customInfo.phone %></div>
+          <div><%= customInfo.email %></div>
+          <div><%= customInfo.address %></div>
+        </div>
+      </div>
+
+      <div class="invoice-info">
+        <table>
+          <tr>
+            <td class="label">Invoice Number</td>
+            <td class="value"><%= info.invoiceNo %></td>
+          </tr>
+          <tr>
+            <td class="label">Invoice Date</td>
+            <td class="value"><%= info.invoiceDate %></td>
+          </tr>
+          <tr>
+            <td class="label">Due Date</td>
+            <td class="value"><%= info.dueDate %></td>
+          </tr>
+          <tr>
+            <td class="label">Payment Method</td>
+            <td class="value"><%= info.paymentMethod %></td>
+          </tr>
+          <tr>
+            <td class="label">Currency</td>
+            <td class="value"><%= info.currency %></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="summary-section">
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="label">Total Invoice Amount (USD)</div>
+          <div class="value">$<%= summary.totalInvoiceAmount.toFixed(2) %></div>
+        </div>
+        <div class="summary-item">
+          <div class="label">Number of Transactions</div>
+          <div class="value"><%= summary.nofOfTransactions %></div>
+        </div>
+        <div class="summary-item">
+          <div class="label">Fuel Volume</div>
+          <div class="value"><%= summary.fuelVolume %> G</div>
+        </div>
+        <div class="summary-item">
+          <div class="label">Number of Cards Used</div>
+          <div class="value"><%= summary.nofOfCardsUsed %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="table-section">
+      <h2 class="section-title">Summary</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="text-center">Volume</th>
+            <th class="text-center">UOM</th>
+            <th class="text-center">Tax</th>
+            <th class="text-center">HST</th>
+            <th class="text-right">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(function(item) { %>
+          <tr>
+            <td><%= item.description %></td>
+            <td class="text-center"><%= item.volume || '' %></td>
+            <td class="text-center"><%= item.uom || '' %></td>
+            <td class="text-center"><%= item.tax || '' %></td>
+            <td class="text-center"><%= item.hst || '' %></td>
+            <td class="text-right"><%= item.amount || '' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Totals Section -->
+    <div class="totals-section">
+      <table class="totals-table">
+        <tr>
+          <td class="label">Subtotal</td>
+          <td class="value">$1,296.30</td>
+        </tr>
+        <tr>
+          <td class="label">Transaction Fees</td>
+          <td class="value">$0.00</td>
+        </tr>
+        <tr>
+          <td class="label">Rebate</td>
+          <td class="value">-$50.00</td>
+        </tr>
+        <tr class="total-row">
+          <td>Total</td>
+          <td>$<%= summary.totalInvoiceAmount.toFixed(2) %></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Currency Conversion -->
+    <div class="currency-conversion">
+      <div class="title">AMOUNT PAYABLE IN CAD</div>
+      <div class="conversion-text">USD $<%= currencyConversion.fromAmount %> converts to CAD $<%= currencyConversion.toAmount %></div>
+      <div class="rate-info">USD $1.00 = CAD $<%= currencyConversion.usdToCadRate %> &nbsp;&nbsp; Conversion XE Rate <%= currencyConversion.date %></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="contact-info">
+        <div class="contact-item">
+          📞 1-844-41-NOMAD
+        </div>
+        <div class="contact-item">
+          ✉️ billing@nomad.io
+        </div>
+        <div class="contact-item">
+          🌐 www.nomad.io
+        </div>
+      </div>
+      <div class="hst-number">HST 78272 141- RT0001</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PdfKitInvoicePdfRenderer } from './pdfkit/pdfkit-invoice-pdf-renderer';
+import { PuppeteerInvoicePdfRendererService } from './puppeteer/puppeteer-invoice-pdf-renderer.service';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -8,7 +10,11 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService,
+        PdfKitInvoicePdfRenderer,
+        PuppeteerInvoicePdfRendererService,
+      ],
     }).compile();
 
     appController = app.get<AppController>(AppController);
